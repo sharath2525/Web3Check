@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Container, 
   Grid, 
@@ -8,12 +8,15 @@ import {
   Typography, 
   Button,
   AppBar,
-  Toolbar,
   Box,
-  Chip
+  Chip,
+  Tabs,
+  Tab
 } from '@mui/material';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import Educational from './Educational'; // New component for educational videos/cards
+import './App.css'; // Import custom CSS
 
 
 // Airdrop data structure with your tweets
@@ -75,102 +78,115 @@ const airdrops = [
 ];
 
 function App() {
+  const [tab, setTab] = useState(0);
+
+  const handleTabChange = (event, newValue) => {
+    setTab(newValue);
+  };
+
   return (
-    <div>
-      <AppBar position="static" sx={{ 
-        backgroundColor: '#1DA1F2',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-      }}>
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ 
-            flexGrow: 1,
-            fontWeight: 'bold'
-          }}>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static" className="custom-appbar">
+        <Box className="navbar-title" sx={{ p: 2, textAlign: 'center', bgcolor: 'primary.main' }}>
+          <Typography variant="h5" className="site-title" sx={{ color: 'white', fontWeight: 'bold', letterSpacing: 1 }}>
             Crypto Airdrops Guide
           </Typography>
-        </Toolbar>
+        </Box>
+        <Tabs value={tab} onChange={handleTabChange} centered className="custom-tabs">
+          <Tab label="Airdrops" className="custom-tab" />
+          <Tab label="Educational Videos" className="custom-tab" />
+        </Tabs>
       </AppBar>
-
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        <Grid container spacing={3}>
-          {airdrops.map((airdrop) => (
-            <Grid item xs={12} sm={6} md={4} key={airdrop.id}>
-              <Card sx={{ 
-                height: '100%', 
-                display: 'flex', 
-                flexDirection: 'column',
-                transition: '0.3s',
-                '&:hover': {
-                  transform: 'translateY(-5px)',
-                  boxShadow: '0 8px 16px rgba(0,0,0,0.1)'
-                }
-              }}>
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={airdrop.imageUrl}
-                  alt={airdrop.projectName}
-                  sx={{
-                    objectFit: 'cover'
-                  }}
-                />
-                <CardContent sx={{ flexGrow: 1, p: 3 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                    <Typography variant="h5" component="h2" sx={{ 
-                      fontWeight: 'bold',
-                      color: '#1a1a1a'
+      <Box sx={{ p: 3 }}>
+        {tab === 0 && (
+          <Box>
+            <Typography variant="h4" gutterBottom>Airdrops</Typography>
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+              <Grid container spacing={3}>
+                {airdrops.map((airdrop) => (
+                  <Grid item xs={12} sm={6} md={4} key={airdrop.id}>
+                    <Card sx={{ 
+                      height: '100%', 
+                      display: 'flex', 
+                      flexDirection: 'column',
+                      transition: '0.3s',
+                      '&:hover': {
+                        transform: 'translateY(-5px)',
+                        boxShadow: '0 8px 16px rgba(0,0,0,0.1)'
+                      }
                     }}>
-                      {airdrop.projectName}
-                    </Typography>
-                    <Chip 
-                      label={airdrop.status}
-                      color={airdrop.status === 'Active' ? 'success' : 'default'}
-                      size="small"
-                    />
-                  </Box>
-                  
-                  <Typography variant="body2" color="text.secondary" paragraph sx={{ mb: 2 }}>
-                    {airdrop.description}
-                  </Typography>
+                      <CardMedia
+                        component="img"
+                        height="200"
+                        image={airdrop.imageUrl}
+                        alt={airdrop.projectName}
+                        sx={{ objectFit: 'cover' }}
+                      />
+                      <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                          <Typography variant="h5" component="h2" sx={{ 
+                            fontWeight: 'bold',
+                            color: '#1a1a1a'
+                          }}>
+                            {airdrop.projectName}
+                          </Typography>
+                          <Chip 
+                            label={airdrop.status}
+                            color={airdrop.status === 'Active' ? 'success' : 'default'}
+                            size="small"
+                          />
+                        </Box>
+                        
+                        <Typography variant="body2" color="text.secondary" paragraph sx={{ mb: 2 }}>
+                          {airdrop.description}
+                        </Typography>
 
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    alignItems: 'center',
-                    mt: 'auto'
-                  }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary' }}>
-                      <AccessTimeIcon sx={{ fontSize: 16, mr: 0.5 }} />
-                      <Typography variant="caption">
-                        {airdrop.date}
-                      </Typography>
-                    </Box>
-                    <Button
-                      variant="contained"
-                      startIcon={<TwitterIcon />}
-                      href={airdrop.twitterLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      sx={{ 
-                        backgroundColor: '#1DA1F2',
-                        '&:hover': {
-                          backgroundColor: '#1991db'
-                        },
-                        borderRadius: '20px',
-                        textTransform: 'none',
-                        px: 2
-                      }}
-                    >
-                      View Guide
-                    </Button>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-    </div>
+                        <Box sx={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between', 
+                          alignItems: 'center',
+                          mt: 'auto'
+                        }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary' }}>
+                            <AccessTimeIcon sx={{ fontSize: 16, mr: 0.5 }} />
+                            <Typography variant="caption">
+                              {airdrop.date}
+                            </Typography>
+                          </Box>
+                          <Button
+                            variant="contained"
+                            startIcon={<TwitterIcon />}
+                            href={airdrop.twitterLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            sx={{ 
+                              backgroundColor: '#1DA1F2',
+                              '&:hover': {
+                                backgroundColor: '#1991db'
+                              },
+                              borderRadius: '20px',
+                              textTransform: 'none',
+                              px: 2
+                            }}
+                          >
+                            View Guide
+                          </Button>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            </Container>
+          </Box>
+        )}
+        {tab === 1 && (
+          <Box>
+            <Educational />
+          </Box>
+        )}
+      </Box>
+    </Box>
   );
 }
 
