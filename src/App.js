@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   Container, 
   Grid, 
@@ -6,21 +6,30 @@ import {
   CardContent, 
   CardMedia, 
   Typography, 
-  Button,
   AppBar,
-  Box,
-  Chip,
   Tabs,
-  Tab
+  Tab,
+  Toolbar,
+  Box,
+  CssBaseline,
+  Button
 } from '@mui/material';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import Educational from './Educational'; // New component for educational videos/cards
-import './App.css'; // Import custom CSS
-
+import Educational from './Educational';
+import './App.css';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import AdbIcon from '@mui/icons-material/Adb';
 
 // Airdrop data structure with your tweets
 const airdrops = [
+  {
+    id: 'humanity',
+    projectName: "Humanity Protocol",
+    description: "Get rewarded for verifying your identity on-chain with Humanity Protocol.",
+    imageUrl: "https://airdrops.io/wp-content/uploads/2024/04/Humanity-Protocol-300x150.png",
+    date: "2024-04-01",
+    status: "Active",
+    type: "html"
+  },
   {
     id: 1,
     projectName: "Airdrop Guide 1",
@@ -28,7 +37,8 @@ const airdrops = [
     twitterLink: "https://x.com/_sharath_d/status/1933589532248870914",
     imageUrl: "https://picsum.photos/300/200?random=1",
     date: "2024-03-14",
-    status: "Active"
+    status: "Active",
+    type: "html"
   },
   {
     id: 2,
@@ -37,7 +47,8 @@ const airdrops = [
     twitterLink: "https://x.com/_sharath_d/status/1933833074682527987",
     imageUrl: "https://picsum.photos/300/200?random=2",
     date: "2024-03-14",
-    status: "Active"
+    status: "Active",
+    type: "html"
   },
   {
     id: 3,
@@ -46,7 +57,8 @@ const airdrops = [
     twitterLink: "https://x.com/_sharath_d/status/1933843094350508451",
     imageUrl: "https://picsum.photos/300/200?random=3",
     date: "2024-03-14",
-    status: "Active"
+    status: "Active",
+    type: "html"
   },
   {
     id: 4,
@@ -55,7 +67,8 @@ const airdrops = [
     twitterLink: "https://x.com/_sharath_d/status/1933220170002272709",
     imageUrl: "https://picsum.photos/300/200?random=4",
     date: "2024-03-14",
-    status: "Active"
+    status: "Active",
+    type: "html"
   },
   {
     id: 5,
@@ -64,129 +77,158 @@ const airdrops = [
     twitterLink: "https://x.com/_sharath_d/status/1933230846498177276",
     imageUrl: "https://picsum.photos/300/200?random=5",
     date: "2024-03-14",
-    status: "Active"
+    status: "Active",
+    type: "html"
   },
   {
     id: 6,
     projectName: "Airdrop Guide 6",
     description: "Exclusive airdrop guide! Follow these steps to participate.",
-    twitterLink: "https://x.com/_sharath_d/status/1932117894911119645",
     imageUrl: "/images/airdrop6.jpg",
     date: "2024-03-14",
-    status: "Active"
+    status: "Active",
+    type: "twitter",
+    twitterLink: "https://x.com/_sharath_d/status/1933843094350508451"
   }
 ];
 
-function App() {
-  const [tab, setTab] = useState(0);
+function Home() {
+  const handleCardClick = (airdrop) => {
+    if (airdrop.type === "twitter" && airdrop.twitterLink) {
+      window.open(airdrop.twitterLink, "_blank");
+    } else if (airdrop.type === "html") {
+      window.location.href = `/airdrops/${airdrop.id}.html`;
+    }
+  };
 
-  const handleTabChange = (event, newValue) => {
-    setTab(newValue);
+  // Fallback image for broken links
+  const handleImgError = (e) => {
+    e.target.src = "https://via.placeholder.com/300x180?text=No+Image";
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" className="custom-appbar">
-        <Box className="navbar-title" sx={{ p: 2, textAlign: 'center', bgcolor: 'primary.main' }}>
-          <Typography variant="h5" className="site-title" sx={{ color: 'white', fontWeight: 'bold', letterSpacing: 1 }}>
-            Crypto Airdrops Guide
-          </Typography>
-        </Box>
-        <Tabs value={tab} onChange={handleTabChange} centered className="custom-tabs">
-          <Tab label="Airdrops" className="custom-tab" />
-          <Tab label="Educational Videos" className="custom-tab" />
-        </Tabs>
-      </AppBar>
-      <Box sx={{ p: 3 }}>
-        {tab === 0 && (
-          <Box>
-            <Typography variant="h4" gutterBottom>Airdrops</Typography>
-            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-              <Grid container spacing={3}>
-                {airdrops.map((airdrop) => (
-                  <Grid item xs={12} sm={6} md={4} key={airdrop.id}>
-                    <Card sx={{ 
-                      height: '100%', 
-                      display: 'flex', 
-                      flexDirection: 'column',
-                      transition: '0.3s',
-                      '&:hover': {
-                        transform: 'translateY(-5px)',
-                        boxShadow: '0 8px 16px rgba(0,0,0,0.1)'
-                      }
-                    }}>
-                      <CardMedia
-                        component="img"
-                        height="200"
-                        image={airdrop.imageUrl}
-                        alt={airdrop.projectName}
-                        sx={{ objectFit: 'cover' }}
-                      />
-                      <CardContent sx={{ flexGrow: 1, p: 3 }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                          <Typography variant="h5" component="h2" sx={{ 
-                            fontWeight: 'bold',
-                            color: '#1a1a1a'
-                          }}>
-                            {airdrop.projectName}
-                          </Typography>
-                          <Chip 
-                            label={airdrop.status}
-                            color={airdrop.status === 'Active' ? 'success' : 'default'}
-                            size="small"
-                          />
-                        </Box>
-                        
-                        <Typography variant="body2" color="text.secondary" paragraph sx={{ mb: 2 }}>
-                          {airdrop.description}
-                        </Typography>
+    <Container maxWidth="lg" sx={{ py: 6 }}>
+      <Typography variant="h4" gutterBottom fontWeight={700}>
+       Airdrops
+      </Typography>
+      <Grid container spacing={4}>
+        {airdrops.map((airdrop) => (
+          <Grid item xs={12} sm={6} md={4} key={airdrop.id}>
+            <Card
+              elevation={6}
+              sx={{
+                borderRadius: 5,
+                overflow: 'hidden',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  transform: 'scale(1.03)',
+                  boxShadow: '0 12px 24px rgba(0,0,0,0.1)'
+                }
+              }}
+              onClick={() => handleCardClick(airdrop)}
+            >
+              <CardMedia
+                component="img"
+                height="180"
+                image={airdrop.imageUrl}
+                alt={airdrop.projectName}
+                onError={handleImgError}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h6" fontWeight={700}>
+                  {airdrop.projectName}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {airdrop.description}
+                </Typography>
+                <Box sx={{ mt: 2 }}>
+                  <Typography variant="caption" color="text.secondary">
+                    📅 Date: {airdrop.date} | ✅ Status: {airdrop.status}
+                  </Typography>
+                </Box>
+                <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-middle' }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{
+                      borderRadius: '30px',
+                      textTransform: 'none',
+                      px: 2,
+                      backgroundColor: '#7c3aed',
+                      '&:hover': { backgroundColor: '#5b21b6' }
+                    }}
+                    onClick={e => { e.stopPropagation(); handleCardClick(airdrop); }}
+                  >
+                    Click here For Guidance 
+                  </Button>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
+  );
+}
 
-                        <Box sx={{ 
-                          display: 'flex', 
-                          justifyContent: 'space-between', 
-                          alignItems: 'center',
-                          mt: 'auto'
-                        }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary' }}>
-                            <AccessTimeIcon sx={{ fontSize: 16, mr: 0.5 }} />
-                            <Typography variant="caption">
-                              {airdrop.date}
-                            </Typography>
-                          </Box>
-                          <Button
-                            variant="contained"
-                            startIcon={<TwitterIcon />}
-                            href={airdrop.twitterLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            sx={{ 
-                              backgroundColor: '#1DA1F2',
-                              '&:hover': {
-                                backgroundColor: '#1991db'
-                              },
-                              borderRadius: '20px',
-                              textTransform: 'none',
-                              px: 2
-                            }}
-                          >
-                            View Guide
-                          </Button>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </Box>
-        )}
-        {tab === 1 && (
-          <Box>
-            <Educational />
-          </Box>
-        )}
-      </Box>
-    </Box>
+function NavTabs() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  // Set tab index based on current path
+  const tabValue = location.pathname.startsWith('/educational') ? 1 : 0;
+
+  return (
+    <Tabs
+      value={tabValue}
+      textColor="inherit"
+      TabIndicatorProps={{ style: { background: '#fff', height: 4, borderRadius: 2 } }}
+      sx={{
+        ".MuiTab-root": {
+          color: '#fff',
+          fontWeight: 600,
+          borderRadius: 999,
+          px: 3,
+          mx: 0.5,
+          '&.Mui-selected': {
+            background: '#fff',
+            color: '#7c3aed'
+          },
+          '&:hover': {
+            background: 'rgba(255,255,255,0.2)'
+          }
+        }
+      }}
+    >
+      <Tab label="AIRDROPS" onClick={() => navigate('/')} />
+      <Tab label="EDUCATIONAL VIDEOS" onClick={() => navigate('/educational')} />
+    </Tabs>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <CssBaseline />
+      <div className="App">
+        <AppBar position="sticky" elevation={6} sx={{ background: 'linear-gradient(to right, #7c3aed, #4f46e5)' }}>
+          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', px: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <AdbIcon sx={{ mr: 1, color: '#fff', fontSize: 32 }} />
+              <Typography variant="h5" noWrap sx={{ color: '#fff', fontWeight: 700 }}>
+                Crypto Airdrops
+              </Typography>
+            </Box>
+            <NavTabs />
+          </Toolbar>
+        </AppBar>
+
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/educational" element={<Educational />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

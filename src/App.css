@@ -52,4 +52,31 @@
     font-size: 0.9rem;
     min-width: 100px;
   }
+}
+
+body {
+  background: linear-gradient(120deg, #f3e8ff 0%, #e0e7ff 100%);
+  min-height: 100vh;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.custom-navbar {
+  background: linear-gradient(90deg, #a855f7 0%, #6366f1 100%) !important;
+  box-shadow: 0 4px 24px 0 rgba(99,102,241,0.10);
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+}
+
+.MuiTabs-indicator {
+  border-radius: 2px;
+}
+
+.MuiTab-root {
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.App {
+  min-height: 100vh;
+  background: transparent;
 } 
